@@ -1,0 +1,53 @@
+{% extends "base.html" -%}
+{% block title %}Breaks{% endblock %}
+{% block content -%}
+<div class="container">
+    <div class="row justify-content-md-center mr-auto">
+        <div class="col-8 p-3">
+            <h3>Breaks</h3>
+        </div>
+        <div class="col-2 p-3">
+            <a href="?add=true" type="button" class="btn btn-primary">Add New Break</a>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="row justify-content-md-center mr-auto">
+                    <div class="col-10 p-3">
+                        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="row justify-content-md-center">
+        <div class="col-6">
+            <table class="table table-responsive">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Break Name</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in breaks %}
+                    <tr>
+                        <td>{{b.name}}</td>
+                        <td>{{b.startDate}}</td>
+                        <td>{{b.endDate}}</td>
+                        <td><a type="button" class="btn btn-warning" href="?edit={{b.id}}"><i class="bi bi-pencil-square"></i></a>
+                            <a type="button" class="btn btn-danger" href="?delete={{b.id}}"><i class="bi bi-trash"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{%- endblock content %}

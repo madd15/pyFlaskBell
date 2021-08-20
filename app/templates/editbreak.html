@@ -1,0 +1,41 @@
+{% extends "base.html" -%}
+{% block title %}{{title}}{% endblock %}
+{% block content -%}
+<div class="container">
+    <div class="row justify-content-md-center mr-auto">
+        <div class="col-10 p-3">
+            <h3>{{title}}</h3>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-6">
+            <form method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="breakName">Name</label>
+                        <input type="text" class="form-control" id="breakName" name="breakName"
+                            pattern="[a-zA-Z][a-zA-Z0-9 \-_]+" placeholder="Enter break name" value="{{breakName}}"
+                            title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, space, - and _"
+                            required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-3 mb-3">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" class="form-control" id="startDate" name="startDate" required
+                            pattern="[\d]{5}-[\d]{2}-[\d]{2}" data-date-format="dd/mm/yyyy" placeholder="Enter start date"
+                            value="{{startDate}}">
+                    </div>
+                    <div class="form-group col-md-3 mb-3">
+                        <label for="endDate">End Date</label>
+                        <input type="date" class="form-control" id="endDate" name="endDate" required
+                            pattern="[\d]{5}-[\d]{2}-[\d]{2}" data-date-format="dd/mm/yyyy" placeholder="Enter end date"
+                            value="{{endDate}}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{%- endblock content %}

@@ -1,0 +1,33 @@
+{% extends "base.html" -%}
+{% block title %}{{title}}{% endblock %}
+{% block content -%}
+<div class="container">
+    <div class="row justify-content-md-center mr-auto">
+        <div class="col-10 p-3">
+            <h3>{{title}}</h3>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-6">
+            <form method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="patternName">Name</label>
+                        <input type="text" class="form-control" id="patternName" pattern="[a-zA-Z][a-zA-Z0-9 \-_]+"
+                            name="patternName" placeholder="Enter pattern name" value="{{patternName}}" 
+                            title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, space, - and _" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="pattern">Pattern</label>
+                        <input type="text" class="form-control" id="pattern" name="pattern" placeholder="Enter pattern"
+                            value="{{pattern}}" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{%- endblock content %}

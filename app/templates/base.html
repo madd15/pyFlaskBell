@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/css/style.css" rel="stylesheet">
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <!-- Current Date and Time-->
+        <script>
+          function init() {
+              date();
+              startTime();
+          }
+
+          function date() {
+              const today = new Date();
+              let d = checkTime(today.getDate());
+              let x = checkTime(today.getMonth() + 1);
+              let y = today.getFullYear();
+              document.getElementById('date').innerHTML =  "Current Date: " + d + "/" + x + "/" + y;
+          }
+
+          function startTime() {
+              const today = new Date();
+              let h = today.getHours();
+              let m = checkTime(today.getMinutes());
+              let s = checkTime(today.getSeconds());
+              let ampm = h >= 12 ? 'pm' : 'am';
+              h = h % 12;
+              h = h ? h : 12;
+              document.getElementById('time').innerHTML =  "Current Time: " + checkTime(h) + ":" + m + ":" + s + " " + ampm;
+              setTimeout(startTime, 1000);
+          }
+
+          function checkTime(i) {
+              if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+              return i;
+          }
+        </script>
+        <!-- End Current Date and Time-->
+        <title>{% block title %}{% endblock %} - School Bell</title>
+      {% endblock head %}
+    </head>
+    <body onload="init()">
+      {% include "partial/nav.html" %}
+      {% block content %}{% endblock content %}
+  </body>
+</html>

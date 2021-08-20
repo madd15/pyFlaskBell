@@ -1,0 +1,67 @@
+{% extends "base.html" -%}
+{% block title %}Times{% endblock %}
+{% block content -%}
+<div class="container">
+    <div class="row justify-content-md-center mr-auto">
+        <div class="col-8 p-3">
+            <h3>Times</h3>
+        </div>
+        <div class="col-2 p-3">
+            <a href="?add=true" type="button" class="btn btn-primary">Add New Time</a>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="row justify-content-md-center mr-auto">
+                    <div class="col-10 p-3">
+                        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="row justify-content-md-center">
+        <div class="col-12">
+            <table class="table table-responsive">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Time Name</th>
+                        <th scope="col">Ring Time</th>
+                        <th scope="col">Ring Pattern Name</th>
+                        <th scope="col" class="text-center">Monday</th>
+                        <th scope="col" class="text-center">Tuesday</th>
+                        <th scope="col" class="text-center">Wednesday</th>
+                        <th scope="col" class="text-center">Thursday</th>
+                        <th scope="col" class="text-center">Friday</th>
+                        <th scope="col" class="text-center">Saturday</th>
+                        <th scope="col" class="text-center">Sunday</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in times %}
+                        <tr class="align-items-center">
+                            <td>{{row[1]}}</td>
+                            <td>{{row[3]}}</td>
+                            <td>{{row[4]}}</td>
+                            {% for day in row[2] %}
+                                {% if day == "1" %}
+                                    <td class="table-success text-center"><i class="bi bi-bell"></i></td>
+                                {% else %}
+                                    <td class="table-danger text-center"><i class="bi bi-bell-slash"></i></td>
+                                {% endif %}
+                            {% endfor %}
+                            <td><a type="button" class="btn btn-warning" href="?edit={{row[0]}}"><i class="bi bi-pencil-square"></i></a>
+                                <a type="button" class="btn btn-danger" href="?delete={{row[0]}}"><i class="bi bi-trash"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{%- endblock content %}
