@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from time import sleep
 
-from . import init_lcd
+from . import lcd
 from flask import Blueprint, flash, redirect, request, url_for
 
 from .models import Break, Pattern, Time
@@ -132,8 +132,6 @@ def nextBell():
     isBreak = False
     isTime = False
 
-    lcd = init_lcd()
-
     while True:
         dateNow = str(datetimeNow.strftime("%Y-%m-%d"))
         printDate = str(datetimeNow.strftime("%d/%m/%y"))
@@ -158,15 +156,20 @@ def nextBell():
                         isTime = True
                         break
         if isTime:
+            lcd.backlight_enabled = True
             lcdText = "\x01 %s %s" % (lcdDate, lcdTime)
             lcdText2 = "\x00 %s %s" % (nextDate, nextTime)
             lcd.cursor_pos = (0, 0)
             lcd.write_string(lcdText)
             lcd.cursor_pos = (1, 0)
             lcd.write_string(lcdText2)
+            lcd.close(clear=False)
             break
         else:
-            datetimeNow = datetimeNow + timedelta(days=1)
-            timeNow = "00:00"
+            # datetimeNow = datetimeNow + timedelta(days=1)
+            # timeNow = "00:00"
+            lcd.backlight_enabled = False
+            lcd.close(clear=True)
 
+    
     return "OK", 200

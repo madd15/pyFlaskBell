@@ -1,3 +1,4 @@
+from time import sleep
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -9,6 +10,35 @@ except RuntimeError:
 
 db = SQLAlchemy()
 
+def init_lcd():
+    lcd = CharLCD('PCF8574', 0x27)
+
+    bell = (0b00000,
+            0b00100,
+            0b01110,
+            0b01110,
+            0b01110,
+            0b11111,
+            0b00100,
+            0b00000)
+
+    clock = (0b00000,
+             0b01110,
+             0b10101,
+             0b10111,
+             0b10001,
+             0b01110,
+             0b00000,
+             0b00000)
+    
+    lcd.create_char(0, bell)
+    lcd.create_char(1, clock)
+    lcd.backlight_enabled = False
+    lcd.clear()
+
+    return lcd
+
+lcd = init_lcd()
 
 def create_app():
     app = Flask(__name__)
@@ -23,11 +53,13 @@ def create_app():
     GPIO.setup(manualBellGPIO, GPIO.OUT, initial=GPIO.LOW)
 
     db.init_app(app)
-    lcd = init_lcd()
+    lcd.backlight_enabled = True
     lcd.cursor_pos = (0, 0)
     lcd.write_string('Loading.........')
     lcd.cursor_pos = (1, 0)
     lcd.write_string('School Bell \x00 \x01')
+    sleep(20)
+    lcd.backlight_enabled = False
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -62,32 +94,3 @@ def create_app():
     app.register_blueprint(scheduled_blueprint, url_prefix='/')
 
     return app
-
-
-
-def init_lcd():
-    lcd = CharLCD('PCF8574', 0x27)
-
-    bell = (0b00000,
-            0b00100,
-            0b01110,
-            0b01110,
-            0b01110,
-            0b11111,
-            0b00100,
-            0b00000)
-
-    clock = (0b00000,
-             0b01110,
-             0b10101,
-             0b10111,
-             0b10001,
-             0b01110,
-             0b00000,
-             0b00000)
-    
-    lcd.create_char(0, bell)
-    lcd.create_char(1, clock)
-    lcd.clear()
-
-    return lcd
