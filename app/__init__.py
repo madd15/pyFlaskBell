@@ -10,6 +10,7 @@ except RuntimeError:
 
 db = SQLAlchemy()
 
+
 def init_lcd():
     lcd = CharLCD('PCF8574', 0x27)
 
@@ -30,7 +31,7 @@ def init_lcd():
              0b01110,
              0b00000,
              0b00000)
-    
+
     lcd.create_char(0, bell)
     lcd.create_char(1, clock)
     lcd.backlight_enabled = False
@@ -38,7 +39,9 @@ def init_lcd():
 
     return lcd
 
+
 lcd = init_lcd()
+
 
 def create_app():
     app = Flask(__name__)

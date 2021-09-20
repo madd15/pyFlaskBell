@@ -49,6 +49,7 @@ def manualBell():
     flash("Bell has been rung!!!!", 'success')
     return redirect(url_for('main.home'))
 
+
 @scheduled.route('/manual/inclement', methods=['POST'])
 def inclementBell():
     bellGPIO = inclementBellGPIO
@@ -171,5 +172,4 @@ def nextBell():
             lcd.backlight_enabled = False
             lcd.close(clear=True)
 
-    
     return "OK", 200
