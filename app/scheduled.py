@@ -171,5 +171,6 @@ def nextBell():
             # timeNow = "00:00"
             lcd.backlight_enabled = False
             lcd.close(clear=True)
+            break
 
     return "OK", 200
