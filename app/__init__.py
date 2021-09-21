@@ -49,9 +49,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///schoolBell.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'pool_size': 20,
         'pool_reset_on_return': 'commit',
-        'pool_timeout': 5,
     }
     inclementBellGPIO = 18
     manualBellGPIO = 15
