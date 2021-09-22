@@ -2,7 +2,6 @@ from datetime import datetime
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required
-
 from . import db
 from .models import Pattern, Time
 
@@ -48,7 +47,7 @@ def times_view():
         flash(msg, 'danger')
         return redirect(url_for('times.times_view'))
     else:
-        times = Time.query.all()
+        times = Time.query.order_by(Time.time).all()
         timeData = []
         for t in times:
             weekData = []
