@@ -1,6 +1,7 @@
-from flask import Blueprint, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from .models import Pattern
+from . import db
+from .models import Pattern, Setting
 
 main = Blueprint('main', __name__)
 
@@ -16,4 +17,26 @@ def index():
 @login_required
 def home():
     patterns = Pattern.query.all()
-    return render_template('home.html', patterns=patterns)
+    settings = Setting.query.filter_by(setting='override_bell').first()
+    return render_template('home.html', patterns=patterns, settings=settings)
+
+
+@main.route('/home', methods=['POST'])
+@login_required
+def home_post():
+    disableBell = False
+    if request.form.get('disableBells'):
+        disableBell = True
+    settingID = request.form.get('settingID')
+    if disableBell:
+        setting = Setting.query.get(settingID)
+        setting.setting_value = 1
+    else:
+        setting = Setting.query.get(settingID)
+        setting.setting_value = 0
+        msg = 'Bells are now enabled'
+        flag = 'success'
+        flash(msg, flag)
+    
+    db.session.commit()
+    return redirect(url_for('main.home'))
