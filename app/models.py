@@ -42,3 +42,8 @@ class specialDayTime(db.Model):
     day = db.Column(db.Integer, nullable=False)
     time = db.Column(db.Time(), unique=True, nullable=False)
     pattern = db.Column(db.Integer, nullable=False)
+
+class Setting(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    setting = db.Column(db.String(100), unique=True, nullable=False)
+    setting_value = db.Column(db.Integer, nullable=False, default=0)
