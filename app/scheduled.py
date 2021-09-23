@@ -4,7 +4,7 @@ from time import sleep
 from . import lcd
 from flask import Blueprint, flash, redirect, request, url_for
 
-from .models import Break, Pattern, Time
+from .models import Break, Pattern, Time, Setting
 
 try:
     import RPi.GPIO as GPIO
@@ -82,6 +82,12 @@ def ringBell():
     GPIO.setwarnings(False)
     GPIO.setup(bellGPIO, GPIO.OUT, initial=GPIO.LOW)
 
+    Override = Setting.query.filter_by(setting='override_bell').first()
+
+    if Override.setting_value == 1:
+        GPIO.cleanup(bellGPIO)
+        return "OK", 200
+
     if dayNumber not in [5, 6]:
         isSchoolDay = True
 
@@ -133,6 +139,8 @@ def nextBell():
     isBreak = False
     isTime = False
 
+    Override = Setting.query.filter_by(setting='override_bell').first()
+
     while True:
         dateNow = str(datetimeNow.strftime("%Y-%m-%d"))
         printDate = str(datetimeNow.strftime("%d/%m/%y"))
@@ -157,18 +165,28 @@ def nextBell():
                         isTime = True
                         break
         if isTime:
-            lcd.backlight_enabled = True
-            lcdText = "\x01 %s %s" % (lcdDate, lcdTime)
-            lcdText2 = "\x00 %s %s" % (nextDate, nextTime)
-            lcd.cursor_pos = (0, 0)
-            lcd.write_string(lcdText)
-            lcd.cursor_pos = (1, 0)
-            lcd.write_string(lcdText2)
-            lcd.close(clear=False)
-            break
+            if Override.setting_value != 1:
+                lcd.backlight_enabled = True
+                lcdText = "\x01 %s %s" % (lcdDate, lcdTime)
+                lcdText2 = "\x00 %s %s" % (nextDate, nextTime)
+                lcd.cursor_pos = (0, 0)
+                lcd.write_string(lcdText)
+                lcd.cursor_pos = (1, 0)
+                lcd.write_string(lcdText2)
+                lcd.close(clear=False)
+                break
+            else:
+                lcd.clear()
+                lcd.backlight_enabled = True
+                lcdText = "\x01 %s %s" % (lcdDate, lcdTime)
+                lcdText2 = "\x00 Overridden"
+                lcd.cursor_pos = (0, 0)
+                lcd.write_string(lcdText)
+                lcd.cursor_pos = (1, 0)
+                lcd.write_string(lcdText2)
+                lcd.close(clear=False)
+                break
         else:
-            # datetimeNow = datetimeNow + timedelta(days=1)
-            # timeNow = "00:00"
             lcd.backlight_enabled = False
             lcd.close(clear=True)
             break
