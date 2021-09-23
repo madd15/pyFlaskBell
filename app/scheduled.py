@@ -169,23 +169,17 @@ def nextBell():
                 lcd.backlight_enabled = True
                 lcdText = "\x01 %s %s" % (lcdDate, lcdTime)
                 lcdText2 = "\x00 %s %s" % (nextDate, nextTime)
-                lcd.cursor_pos = (0, 0)
-                lcd.write_string(lcdText)
-                lcd.cursor_pos = (1, 0)
-                lcd.write_string(lcdText2)
-                lcd.close(clear=False)
-                break
             else:
                 lcd.clear()
                 lcd.backlight_enabled = True
                 lcdText = "\x01 %s %s" % (lcdDate, lcdTime)
                 lcdText2 = "\x00 Overridden"
-                lcd.cursor_pos = (0, 0)
-                lcd.write_string(lcdText)
-                lcd.cursor_pos = (1, 0)
-                lcd.write_string(lcdText2)
-                lcd.close(clear=False)
-                break
+            lcd.cursor_pos = (0, 0)
+            lcd.write_string(lcdText)
+            lcd.cursor_pos = (1, 0)
+            lcd.write_string(lcdText2)
+            lcd.close(clear=False)
+            break
         else:
             lcd.backlight_enabled = False
             lcd.close(clear=True)
