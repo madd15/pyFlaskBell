@@ -12,15 +12,9 @@
             <form method="post">
                 <div class="form-row">
                     <div class="form-group col-md-6 mb-3">
-                        <label for="timeName">Name</label>
-                        <input type="text" class="form-control" id="timeName" pattern="[a-zA-Z][a-zA-Z0-9 \-_]+"
-                            name="timeName" placeholder="Enter time name" value="{{timeName}}" 
-                            title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, space, - and _" required>
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="ringTime">Time</label>
-                        <input type="time" class="form-control" id="ringTime" name="ringTime" data-time-format="HH:MM" pattern="[\d]{2}:[\d]{2}"
-                            placeholder="Enter time" value="{{ringTime}}" required>
+                        <label for="time">Time</label>
+                        <input type="time" class="form-control" id="time" name="time" data-time-format="HH:MM" pattern="[\d]{2}:[\d]{2}"
+                            placeholder="Enter time" value="{{time}}" required>
                     </div>
                 </div>
                 <div class="form-row">
@@ -31,19 +25,6 @@
                             <option value="{{p.id}}">{{p.name}}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6 mb-3">
-                        {% for day in weekData %}
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" id="{{day[0]}}" name="{{day[0]}}"
-                                {% if day[1] == "1" %}checked="checked" {% endif %}>
-                            <label class="form-check-label" for="defaultCheck1">
-                                {{ day[0] }}
-                            </label>
-                        </div>
-                        {% endfor %}
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>

@@ -73,10 +73,16 @@ def times_view():
         timeData = []
         for t in getTimes:
             id = t.id
-            time = t.time
+            time = t.time.strftime("%H:%M")
             pattern = t.pattern
             pattern = Pattern.query.get(pattern)
             timeData.append([id,time,pattern.name])
         return render_template('sdtimes.html', tid=times, times=timeData)
+    elif edit:
+        getTime = specialDayTime.query.get(edit)
+        time = getTime.time.strftime("%H:%M")
+        patterns = Pattern.query.all()
+        title = "Edit Time"
+        return render_template('editsdtime.html', title=title, timeId=edit, time=time, timePattern=getTime.pattern, patterns=patterns)
     else:
         return redirect(url_for('specialDays.view'))
