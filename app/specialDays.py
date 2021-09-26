@@ -13,7 +13,6 @@ def view():
     edit = request.args.get('edit')
     add = request.args.get('add')
     delete = request.args.get('delete')
-    times = request.args.get('times')
     if add:
         title = "Add Special Day"
         return render_template('editSP.html', title=title)
@@ -21,16 +20,6 @@ def view():
         editSP = specialDay.query.get(edit)
         title = " Edit SpecialDay - %s" % editSP.name
         return render_template('editSP.html', title=title, sdId=edit, sdName=editSP.name, sDate=editSP.sdate)
-    elif times:
-        getTimes = specialDayTime.query.filter_by(day=times).all()
-        timeData = []
-        for t in getTimes:
-            id = t.id
-            time = t.time
-            pattern = t.pattern
-            pattern = Pattern.query.get(pattern)
-            timeData.append([id,time,pattern.name])
-        return render_template('sdtimes.html', tid=times, times=timeData)
     elif delete:
         qry = specialDay.query.get(delete)
         db.session.delete(qry)
@@ -69,5 +58,25 @@ def post():
         msg = 'Special Day with ID %s has been updated!' % editSD.id
         flash(msg, 'success')
         return redirect(url_for('specialDays.view'))
+    else:
+        return redirect(url_for('specialDays.view'))
+
+@specialDays.route('/specday/times')
+@login_required
+def times_view():
+    edit = request.args.get('edit')
+    add = request.args.get('add')
+    delete = request.args.get('delete')
+    times = request.args.get('id')
+    if times:
+        getTimes = specialDayTime.query.filter_by(day=times).all()
+        timeData = []
+        for t in getTimes:
+            id = t.id
+            time = t.time
+            pattern = t.pattern
+            pattern = Pattern.query.get(pattern)
+            timeData.append([id,time,pattern.name])
+        return render_template('sdtimes.html', tid=times, times=timeData)
     else:
         return redirect(url_for('specialDays.view'))

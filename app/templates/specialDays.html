@@ -39,7 +39,7 @@
                     <tr>
                         <td>{{sd.name}}</td>
                         <td>{{sd.sdate}}</td>
-                        <td><a type="button" class="btn btn-info" href="?times={{sd.id}}"><i class="bi bi-clock"></i></a>
+                        <td><a type="button" class="btn btn-info" href="{{url_for('specialDays.times_view')}}?id={{sd.id}}"><i class="bi bi-clock"></i></a>
                             <a type="button" class="btn btn-warning" href="?edit={{sd.id}}"><i class="bi bi-pencil-square"></i></a>
                             <a type="button" class="btn btn-danger" href="?delete={{sd.id}}"><i class="bi bi-trash"></i></a></td>
                     </tr>
