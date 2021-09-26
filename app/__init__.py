@@ -99,4 +99,7 @@ def create_app():
     from .scheduled import scheduled as scheduled_blueprint
     app.register_blueprint(scheduled_blueprint, url_prefix='/')
 
+    from .specialDays import specialDays as specialDays_blueprint
+    app.register_blueprint(specialDays_blueprint, url_prefix='/')
+
     return app

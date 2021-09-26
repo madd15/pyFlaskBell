@@ -68,7 +68,7 @@ def users_post():
             editUser.password = generate_password_hash(
                 password, method='sha256')
         db.session.commit()
-        msg = 'User %s has been edited!' % editUser.username
+        msg = 'User %s has been updated!' % editUser.username
         flash(msg, 'success')
         return redirect(url_for('users.users_view'))
     else:

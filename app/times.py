@@ -86,7 +86,7 @@ def times_post():
                        time=ringTime, pattern=ringPattern)
         db.session.add(newTime)
         db.session.commit()
-        msg = 'Time with ID %s has been updated!' % newTime.id
+        msg = 'Time with ID %s has been added!' % newTime.id
         flash(msg, 'success')
         return redirect(url_for('times.times_view'))
     elif edit:
@@ -106,7 +106,7 @@ def times_post():
         editTime.time = ringTime
         editTime.pattern = ringPattern
         db.session.commit()
-        msg = 'Time with ID %s has been edited!' % editTime.id
+        msg = 'Time with ID %s has been updated!' % editTime.id
         flash(msg, 'success')
         return redirect(url_for('times.times_view'))
     else:

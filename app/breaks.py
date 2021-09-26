@@ -50,7 +50,7 @@ def breaks_post():
         newBreak = Break(name=breakName, startDate=startDate, endDate=endDate)
         db.session.add(newBreak)
         db.session.commit()
-        msg = 'Break with ID %s has been updated!' % newBreak.id
+        msg = 'Break with ID %s has been added!' % newBreak.id
         flash(msg, 'success')
         return redirect(url_for('breaks.breaks_view'))
     elif edit:
@@ -63,7 +63,7 @@ def breaks_post():
         editBreak.startDate = startDate
         editBreak.endDate = endDate
         db.session.commit()
-        msg = 'Break with ID %s has been edited!' % editBreak.id
+        msg = 'Break with ID %s has been updated!' % editBreak.id
         flash(msg, 'success')
         return redirect(url_for('breaks.breaks_view'))
     else:

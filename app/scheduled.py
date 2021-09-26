@@ -72,8 +72,6 @@ def ringBell():
     timeNow = datetimeNow.strftime("%H:%M")
 
     dayNumber = datetimeNow.weekday()
-    isSchoolDay = False
-    isBreak = False
     isTime = False
     bellRelay = False
     bellGPIO = manualBellGPIO
@@ -88,16 +86,10 @@ def ringBell():
         GPIO.cleanup(bellGPIO)
         return "OK", 200
 
-    if dayNumber not in [5, 6]:
-        isSchoolDay = True
-
-    if isSchoolDay:
-        breaks = Break.query.filter(
+    breaks = Break.query.filter(
             Break.startDate <= dateNow, Break.endDate >= dateNow).count()
-        if breaks:
-            isBreak = True
-
-    if not isBreak:
+    if breaks == 0:
+        print('Not a break')
         ringTimes = Time.query.all()
         for t in ringTimes:
             if t.time.strftime("%H:%M") == timeNow:
@@ -107,6 +99,7 @@ def ringBell():
                     break
 
     if isTime:
+        print('Time to ring')
         qPattern = Pattern.query.get(patternId)
         if qPattern:
             rPattern = qPattern.pattern.replace(" ", "").split(",")
@@ -135,8 +128,6 @@ def nextBell():
     lcdDate = str(datetimeNow.strftime("%d/%m/%y"))
     lcdTime = datetimeNow.strftime("%H:%M")
 
-    isSchoolDay = False
-    isBreak = False
     isTime = False
 
     Override = Setting.query.filter_by(setting='override_bell').first()
@@ -146,15 +137,9 @@ def nextBell():
         printDate = str(datetimeNow.strftime("%d/%m/%y"))
         dayNumber = datetimeNow.weekday()
 
-        if dayNumber not in [5, 6]:
-            isSchoolDay = True
-
-        if isSchoolDay:
-            breaks = Break.query.filter(
-                Break.startDate <= dateNow, Break.endDate >= dateNow).count()
-            if breaks:
-                isBreak = True
-        if not isBreak:
+        breaks = Break.query.filter(
+            Break.startDate <= dateNow, Break.endDate >= dateNow).count()
+        if breaks == 0:
             ringTimes = Time.query.all()
             for t in ringTimes:
                 dbTime = t.time.strftime("%H:%M")

@@ -49,7 +49,7 @@ def patterns_post():
         newPattern = Pattern(name=patternName, pattern=pattern)
         db.session.add(newPattern)
         db.session.commit()
-        msg = 'Pattern with ID %s has been updated!' % newPattern.id
+        msg = 'Pattern with ID %s has been added!' % newPattern.id
         flash(msg, 'success')
         return redirect(url_for('patterns.patterns_view'))
     elif edit:
@@ -59,7 +59,7 @@ def patterns_post():
         editPattern.name = patternName
         editPattern.pattern = pattern
         db.session.commit()
-        msg = 'Pattern with ID %s has been edited!' % editPattern.id
+        msg = 'Pattern with ID %s has been updated!' % editPattern.id
         flash(msg, 'success')
         return redirect(url_for('patterns.patterns_view'))
     else:
