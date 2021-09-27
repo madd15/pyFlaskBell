@@ -78,11 +78,52 @@ def times_view():
             pattern = Pattern.query.get(pattern)
             timeData.append([id,time,pattern.name])
         return render_template('sdtimes.html', tid=times, times=timeData)
+    elif add:
+        patterns = Pattern.query.all()
+        title = "Edit Time"
+        return render_template('editsdtime.html', title=title, patterns=patterns)
     elif edit:
         getTime = specialDayTime.query.get(edit)
         time = getTime.time.strftime("%H:%M")
         patterns = Pattern.query.all()
         title = "Edit Time"
         return render_template('editsdtime.html', title=title, timeId=edit, time=time, timePattern=getTime.pattern, patterns=patterns)
+    elif delete:
+        dayID = request.args.get('t')
+        qry = specialDayTime.query.get(delete)
+        db.session.delete(qry)
+        db.session.commit()
+        msg = 'Time with ID %s has been deleted!' % delete
+        flash(msg, 'danger')
+        return redirect(url_for('specialDays.times_view', id=dayID))
     else:
         return redirect(url_for('specialDays.view'))
+
+@specialDays.route('/specday/times', methods=['POST'])
+@login_required
+def times_post():
+    edit = request.args.get('edit')
+    add = request.args.get('add')
+    specDay = request.args.get('t')
+    if add:
+        time = datetime.strptime(request.form.get('time'), '%H:%M').time()
+        pattern = request.form.get('pattern')
+        dayID = add
+        newTime = specialDayTime(day=dayID,time=time,pattern=pattern)
+        db.session.add(newTime)
+        db.session.commit()
+        msg = 'Time with ID %s has been added!' % newTime.id
+        flash(msg, 'success')
+        return redirect(url_for('specialDays.times_view', id=dayID))
+    elif edit:
+        time = datetime.strptime(request.form.get('time'), '%H:%M').time()
+        pattern = request.form.get('pattern')
+        editTime = specialDayTime.query.get(edit)
+        editTime.time = time
+        editTime.pattern = pattern
+        db.session.commit()
+        msg = 'Time with ID %s has been updated!' % editTime.id
+        flash(msg, 'success')
+        return redirect(url_for('specialDays.times_view', id=specDay))
+    else:
+        return redirect(url_for('specialDays.times_view', id=specDay))

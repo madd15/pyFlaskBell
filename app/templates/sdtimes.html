@@ -25,7 +25,7 @@
         {% endif %}
     {% endwith %}
     <div class="row justify-content-md-center">
-        <div class="col-12">
+        <div class="col-6">
             <table class="table table-responsive">
                 <thead class="thead-light">
                     <tr>
@@ -39,8 +39,8 @@
                         <tr class="align-items-center">
                             <td>{{row[1]}}</td>
                             <td>{{row[2]}}</td>
-                            <td><a type="button" class="btn btn-warning" href="?edit={{row[0]}}"><i class="bi bi-pencil-square"></i></a>
-                                <a type="button" class="btn btn-danger" href="?delete={{row[0]}}"><i class="bi bi-trash"></i></a></td>
+                            <td><a type="button" class="btn btn-warning" href="?t={{tid}}&edit={{row[0]}}"><i class="bi bi-pencil-square"></i></a>
+                                <a type="button" class="btn btn-danger" href="?t={{tid}}&delete={{row[0]}}"><i class="bi bi-trash"></i></a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
