@@ -21,8 +21,8 @@ def view():
         title = " Edit SpecialDay - %s" % editSP.name
         return render_template('editSP.html', title=title, sdId=edit, sdName=editSP.name, sDate=editSP.sdate)
     elif delete:
-        qry = specialDay.query.get(delete)
-        db.session.delete(qry)
+        specialDay.query.filter(specialDay.id == delete).delete()
+        specialDayTime.query.filter(specialDayTime.day == delete).delete()
         db.session.commit()
         msg = 'Special Day with ID %s has been deleted!' % delete
         flash(msg, 'danger')
@@ -90,8 +90,7 @@ def times_view():
         return render_template('editsdtime.html', title=title, timeId=edit, time=time, timePattern=getTime.pattern, patterns=patterns)
     elif delete:
         dayID = request.args.get('t')
-        qry = specialDayTime.query.get(delete)
-        db.session.delete(qry)
+        specialDayTime.query.filter(specialDayTime.id == delete).delete()
         db.session.commit()
         msg = 'Time with ID %s has been deleted!' % delete
         flash(msg, 'danger')
