@@ -4,7 +4,7 @@ from time import sleep
 from . import lcd
 from flask import Blueprint, flash, redirect, request, url_for
 
-from .models import Break, Pattern, Time, Setting
+from .models import Break, Pattern, Time, Setting, specialDay, specialDayTime
 
 try:
     import RPi.GPIO as GPIO
@@ -86,17 +86,30 @@ def ringBell():
         GPIO.cleanup(bellGPIO)
         return "OK", 200
 
-    breaks = Break.query.filter(
-            Break.startDate <= dateNow, Break.endDate >= dateNow).count()
-    if breaks == 0:
-        print('Not a break')
-        ringTimes = Time.query.all()
-        for t in ringTimes:
+    specDay = specialDay.query.filter(
+        specialDay.sdate == dateNow
+    ).first()
+    if specDay:
+        specDayTime = specialDayTime.query.filter(
+            specialDayTime.day == specDay.id
+        ).order_by(specialDayTime.time).all()
+        for t in specDayTime:
             if t.time.strftime("%H:%M") == timeNow:
-                if t.days[dayNumber] == '1':
-                    patternId = t.pattern
-                    isTime = True
-                    break
+                patternId = t.pattern
+                isTime = True
+                break
+    else:
+        breaks = Break.query.filter(
+                Break.startDate <= dateNow, Break.endDate >= dateNow).count()
+        if breaks == 0:
+            print('Not a break')
+            ringTimes = Time.query.all()
+            for t in ringTimes:
+                if t.time.strftime("%H:%M") == timeNow:
+                    if t.days[dayNumber] == '1':
+                        patternId = t.pattern
+                        isTime = True
+                        break
 
     if isTime:
         print('Time to ring')
@@ -137,18 +150,33 @@ def nextBell():
         printDate = str(datetimeNow.strftime("%d/%m/%y"))
         dayNumber = datetimeNow.weekday()
 
-        breaks = Break.query.filter(
-            Break.startDate <= dateNow, Break.endDate >= dateNow).count()
-        if breaks == 0:
-            ringTimes = Time.query.all()
-            for t in ringTimes:
+        specDay = specialDay.query.filter(
+            specialDay.sdate == dateNow
+        ).first()
+        if specDay:
+            specDayTime = specialDayTime.query.filter(
+                specialDayTime.day == specDay.id
+            ).order_by(specialDayTime.time).all()
+            for t in specDayTime:
                 dbTime = t.time.strftime("%H:%M")
-                if dbTime >= timeNow:
-                    if t.days[dayNumber] == '1':
-                        nextDate = printDate
-                        nextTime = dbTime
-                        isTime = True
-                        break
+                if  dbTime >= timeNow:
+                    nextDate = printDate
+                    nextTime = dbTime
+                    isTime = True
+                    break
+        else:
+            breaks = Break.query.filter(
+                Break.startDate <= dateNow, Break.endDate >= dateNow).count()
+            if breaks == 0:
+                ringTimes = Time.query.all()
+                for t in ringTimes:
+                    dbTime = t.time.strftime("%H:%M")
+                    if dbTime >= timeNow:
+                        if t.days[dayNumber] == '1':
+                            nextDate = printDate
+                            nextTime = dbTime
+                            isTime = True
+                            break
         if isTime:
             if Override.setting_value != 1:
                 lcd.backlight_enabled = True

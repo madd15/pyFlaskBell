@@ -69,7 +69,7 @@ def times_view():
     delete = request.args.get('delete')
     times = request.args.get('id')
     if times:
-        getTimes = specialDayTime.query.filter_by(day=times).all()
+        getTimes = specialDayTime.query.filter_by(day=times).order_by(specialDayTime.time).all()
         timeData = []
         for t in getTimes:
             id = t.id
