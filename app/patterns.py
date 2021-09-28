@@ -26,8 +26,7 @@ def patterns_view():
         title = "Edit Pattern - %s" % editPattern.name
         return render_template('editpattern.html', title=title, patternId=edit, patternName=editPattern.name, pattern=editPattern.pattern)
     elif delete:
-        qry = Pattern.query.get(delete)
-        db.session.delete(qry)
+        Pattern.query.filter(Pattern.id == delete).delete()
         db.session.commit()
         msg = 'Pattern with ID %s has been deleted!' % delete
         flash(msg, 'danger')

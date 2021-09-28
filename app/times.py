@@ -40,8 +40,7 @@ def times_view():
         title = "Edit Time - %s" % editTime.name
         return render_template('edittime.html', title=title, timeId=edit, timeName=editTime.name, weekData=weekData, ringTime=time.strftime("%H:%M"), ringPattern=editTime.pattern, patterns=patterns)
     elif delete:
-        qry = Time.query.get(delete)
-        db.session.delete(qry)
+        Time.query.filter(Time.id == delete).delete()
         db.session.commit()
         msg = 'Time with ID %s has been deleted!' % delete
         flash(msg, 'danger')

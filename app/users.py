@@ -25,10 +25,9 @@ def users_view():
         title = " Edit User - %s" % editUser.username
         return render_template('edituser.html', title=title, userId=edit, username=editUser.username)
     elif delete:
-        qry = User.query.get(delete)
-        db.session.delete(qry)
+        User.query.filter(User.id == delete).delete()
         db.session.commit()
-        msg = 'User %s has been deleted!' % qry.username
+        msg = 'User deleted!'
         flash(msg, 'danger')
         return redirect(url_for('users.users_view'))
     else:

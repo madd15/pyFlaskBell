@@ -7,6 +7,7 @@ from .models import Pattern, specialDay, specialDayTime
 
 specialDays = Blueprint('specialDays', __name__)
 
+
 @specialDays.route('/specday')
 @login_required
 def view():
@@ -49,8 +50,7 @@ def post():
         return redirect(url_for('specialDays.view'))
     elif edit:
         sdName = request.form.get('sdName')
-        sDate = datetime.strptime(
-            request.form.get('sDate'), "%Y-%m-%d")
+        sDate = datetime.strptime(request.form.get('sDate'), "%Y-%m-%d")
         editSD = specialDay.query.get(edit)
         editSD.name = sdName
         editSD.sdate = sDate
@@ -61,6 +61,7 @@ def post():
     else:
         return redirect(url_for('specialDays.view'))
 
+
 @specialDays.route('/specday/times')
 @login_required
 def times_view():
@@ -69,14 +70,15 @@ def times_view():
     delete = request.args.get('delete')
     times = request.args.get('id')
     if times:
-        getTimes = specialDayTime.query.filter_by(day=times).order_by(specialDayTime.time).all()
+        getTimes = specialDayTime.query.filter_by(
+            day=times).order_by(specialDayTime.time).all()
         timeData = []
         for t in getTimes:
             id = t.id
             time = t.time.strftime("%H:%M")
             pattern = t.pattern
             pattern = Pattern.query.get(pattern)
-            timeData.append([id,time,pattern.name])
+            timeData.append([id, time, pattern.name])
         return render_template('sdtimes.html', tid=times, times=timeData)
     elif add:
         patterns = Pattern.query.all()
@@ -98,6 +100,7 @@ def times_view():
     else:
         return redirect(url_for('specialDays.view'))
 
+
 @specialDays.route('/specday/times', methods=['POST'])
 @login_required
 def times_post():
@@ -108,7 +111,7 @@ def times_post():
         time = datetime.strptime(request.form.get('time'), '%H:%M').time()
         pattern = request.form.get('pattern')
         dayID = add
-        newTime = specialDayTime(day=dayID,time=time,pattern=pattern)
+        newTime = specialDayTime(day=dayID, time=time, pattern=pattern)
         db.session.add(newTime)
         db.session.commit()
         msg = 'Time with ID %s has been added!' % newTime.id

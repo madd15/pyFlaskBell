@@ -100,7 +100,7 @@ def ringBell():
                 break
     else:
         breaks = Break.query.filter(
-                Break.startDate <= dateNow, Break.endDate >= dateNow).count()
+            Break.startDate <= dateNow, Break.endDate >= dateNow).count()
         if breaks == 0:
             print('Not a break')
             ringTimes = Time.query.all()
@@ -159,7 +159,7 @@ def nextBell():
             ).order_by(specialDayTime.time).all()
             for t in specDayTime:
                 dbTime = t.time.strftime("%H:%M")
-                if  dbTime >= timeNow:
+                if dbTime >= timeNow:
                     nextDate = printDate
                     nextTime = dbTime
                     isTime = True

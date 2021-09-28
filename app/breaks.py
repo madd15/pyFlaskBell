@@ -26,8 +26,7 @@ def breaks_view():
         title = " Edit Break - %s" % editBreak.name
         return render_template('editbreak.html', title=title, breakId=edit, breakName=editBreak.name, startDate=editBreak.startDate, endDate=editBreak.endDate)
     elif delete:
-        qry = Break.query.get(delete)
-        db.session.delete(qry)
+        Break.query.filter(Break.id == delete).delete()
         db.session.commit()
         msg = 'Break with ID %s has been deleted!' % delete
         flash(msg, 'danger')
