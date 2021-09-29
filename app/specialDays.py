@@ -69,7 +69,9 @@ def times_view():
     add = request.args.get('add')
     delete = request.args.get('delete')
     times = request.args.get('id')
+    specDay = request.args.get('t')
     if times:
+        getDay = specialDay.query.get(times)
         getTimes = specialDayTime.query.filter_by(
             day=times).order_by(specialDayTime.time).all()
         timeData = []
@@ -79,17 +81,17 @@ def times_view():
             pattern = t.pattern
             pattern = Pattern.query.get(pattern)
             timeData.append([id, time, pattern.name])
-        return render_template('sdtimes.html', tid=times, times=timeData)
+        return render_template('sdtimes.html', tid=times, times=timeData, dayName=getDay.name)
     elif add:
         patterns = Pattern.query.all()
-        title = "Edit Time"
-        return render_template('editsdtime.html', title=title, patterns=patterns)
+        title = "Add Time"
+        return render_template('editsdtime.html', title=title, sdID=add, patterns=patterns)
     elif edit:
         getTime = specialDayTime.query.get(edit)
         time = getTime.time.strftime("%H:%M")
         patterns = Pattern.query.all()
         title = "Edit Time"
-        return render_template('editsdtime.html', title=title, timeId=edit, time=time, timePattern=getTime.pattern, patterns=patterns)
+        return render_template('editsdtime.html', title=title, sdID=specDay, timeId=edit, time=time, timePattern=getTime.pattern, patterns=patterns)
     elif delete:
         dayID = request.args.get('t')
         specialDayTime.query.filter(specialDayTime.id == delete).delete()
