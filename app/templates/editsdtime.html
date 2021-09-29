@@ -17,16 +17,6 @@
                             placeholder="Enter time" value="{{time}}" required>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="pattern">Ring Pattern</label>
-                        <select id="pattern" class="form-control" name="pattern">
-                            {% for p in patterns %}
-                            <option value="{{p.id}}">{{p.name}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
                 <a type="button" class="btn btn-secondary" href="{{ url_for('specialDays.times_view', id=sdID) }}">Cancel</a>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

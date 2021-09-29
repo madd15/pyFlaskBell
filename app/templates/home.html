@@ -42,16 +42,6 @@
                         <button type="submit" class="btn btn-success btn-lg">RING THE BELL</button>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="pattern">Ring Pattern</label>
-                        <select id="pattern" class="form-control" name="pattern">
-                            {% for p in patterns %}
-                                <option value="{{p.id}}">{{p.name}} | {{p.pattern}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
             </form>
         </div>
     </div>

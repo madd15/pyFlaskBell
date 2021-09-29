@@ -3,7 +3,7 @@ from datetime import datetime, time
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from . import db
-from .models import Pattern, specialDay, specialDayTime
+from .models import specialDay, specialDayTime
 
 specialDays = Blueprint('specialDays', __name__)
 
@@ -78,20 +78,16 @@ def times_view():
         for t in getTimes:
             id = t.id
             time = t.time.strftime("%H:%M")
-            pattern = t.pattern
-            pattern = Pattern.query.get(pattern)
-            timeData.append([id, time, pattern.name])
+            timeData.append([id, time])
         return render_template('sdtimes.html', tid=times, times=timeData, dayName=getDay.name)
     elif add:
-        patterns = Pattern.query.all()
         title = "Add Time"
-        return render_template('editsdtime.html', title=title, sdID=add, patterns=patterns)
+        return render_template('editsdtime.html', title=title, sdID=add)
     elif edit:
         getTime = specialDayTime.query.get(edit)
         time = getTime.time.strftime("%H:%M")
-        patterns = Pattern.query.all()
         title = "Edit Time"
-        return render_template('editsdtime.html', title=title, sdID=specDay, timeId=edit, time=time, timePattern=getTime.pattern, patterns=patterns)
+        return render_template('editsdtime.html', title=title, sdID=specDay, timeId=edit, time=time)
     elif delete:
         dayID = request.args.get('t')
         specialDayTime.query.filter(specialDayTime.id == delete).delete()
@@ -111,9 +107,8 @@ def times_post():
     specDay = request.args.get('t')
     if add:
         time = datetime.strptime(request.form.get('time'), '%H:%M').time()
-        pattern = request.form.get('pattern')
         dayID = add
-        newTime = specialDayTime(day=dayID, time=time, pattern=pattern)
+        newTime = specialDayTime(day=dayID, time=time)
         db.session.add(newTime)
         db.session.commit()
         msg = 'Time with ID %s has been added!' % newTime.id
@@ -121,10 +116,8 @@ def times_post():
         return redirect(url_for('specialDays.times_view', id=dayID))
     elif edit:
         time = datetime.strptime(request.form.get('time'), '%H:%M').time()
-        pattern = request.form.get('pattern')
         editTime = specialDayTime.query.get(edit)
         editTime.time = time
-        editTime.pattern = pattern
         db.session.commit()
         msg = 'Time with ID %s has been updated!' % editTime.id
         flash(msg, 'success')

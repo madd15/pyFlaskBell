@@ -4,7 +4,7 @@ from time import sleep
 from . import lcd
 from flask import Blueprint, flash, redirect, request, url_for
 
-from .models import Break, Pattern, Time, Setting, specialDay, specialDayTime
+from .models import Break, Time, Setting, specialDay, specialDayTime
 
 try:
     import RPi.GPIO as GPIO
@@ -24,27 +24,14 @@ def scheduled_invalid():
 
 @scheduled.route('/manual/ringbell', methods=['POST'])
 def manualBell():
-    ringPattern = Pattern.query.get(request.form.get('pattern'))
-    bellRelay = False
     bellGPIO = manualBellGPIO
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     GPIO.setup(bellGPIO, GPIO.OUT, initial=GPIO.LOW)
-    if ringPattern:
-        rPattern = ringPattern.pattern.replace(" ", "").split(",")
-        i = 0
-        for p in rPattern:
-            timeDelay = (float(int(p)) / 10)
-            if i % 2 == 0:
-                bellRelay = True
-            else:
-                bellRelay = False
-
-            GPIO.output(bellGPIO, bellRelay)
-            sleep(timeDelay)
-            i += 1
-        GPIO.output(bellGPIO, False)
+    GPIO.output(bellGPIO, True)
+    sleep(1)
+    GPIO.output(bellGPIO, False)
     GPIO.cleanup(bellGPIO)
     flash("Bell has been rung!!!!", 'success')
     return redirect(url_for('main.home'))
@@ -73,7 +60,6 @@ def ringBell():
 
     dayNumber = datetimeNow.weekday()
     isTime = False
-    bellRelay = False
     bellGPIO = manualBellGPIO
 
     GPIO.setmode(GPIO.BCM)
@@ -95,39 +81,23 @@ def ringBell():
         ).order_by(specialDayTime.time).all()
         for t in specDayTime:
             if t.time.strftime("%H:%M") == timeNow:
-                patternId = t.pattern
                 isTime = True
                 break
     else:
         breaks = Break.query.filter(
             Break.startDate <= dateNow, Break.endDate >= dateNow).count()
         if breaks == 0:
-            print('Not a break')
             ringTimes = Time.query.all()
             for t in ringTimes:
                 if t.time.strftime("%H:%M") == timeNow:
                     if t.days[dayNumber] == '1':
-                        patternId = t.pattern
                         isTime = True
                         break
 
     if isTime:
-        print('Time to ring')
-        qPattern = Pattern.query.get(patternId)
-        if qPattern:
-            rPattern = qPattern.pattern.replace(" ", "").split(",")
-            i = 0
-            for p in rPattern:
-                timeDelay = (float(int(p)) / 10)
-                if i % 2 == 0:
-                    bellRelay = True
-                else:
-                    bellRelay = False
-
-                GPIO.output(bellGPIO, bellRelay)
-                sleep(timeDelay)
-                i += 1
-            GPIO.output(bellGPIO, False)
+        GPIO.output(bellGPIO, True)
+        sleep(1)
+        GPIO.output(bellGPIO, False)
 
     GPIO.cleanup(bellGPIO)
 

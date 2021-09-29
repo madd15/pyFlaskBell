@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from . import db
-from .models import Pattern, Setting
+from .models import Setting
 
 main = Blueprint('main', __name__)
 
@@ -16,9 +16,8 @@ def index():
 @main.route('/home')
 @login_required
 def home():
-    patterns = Pattern.query.all()
     settings = Setting.query.filter_by(setting='override_bell').first()
-    return render_template('home.html', patterns=patterns, settings=settings)
+    return render_template('home.html', settings=settings)
 
 
 @main.route('/home', methods=['POST'])

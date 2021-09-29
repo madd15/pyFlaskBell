@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from . import db
-from .models import Pattern, Time
+from .models import Time
 
 times = Blueprint('times', __name__)
 
@@ -23,8 +23,7 @@ def times_view():
         for dayNumber in range(0, 7):
             dayName = getDayName(dayNumber)
             weekData.append([dayName])
-        patterns = Pattern.query.all()
-        return render_template('edittime.html', title=title, patterns=patterns, weekData=weekData)
+        return render_template('edittime.html', title=title, weekData=weekData)
     elif edit:
         editTime = Time.query.get(edit)
         time = editTime.time
@@ -36,9 +35,8 @@ def times_view():
             else:
                 active = "0"
             weekData.append([dayName, active])
-        patterns = Pattern.query.all()
         title = "Edit Time - %s" % editTime.name
-        return render_template('edittime.html', title=title, timeId=edit, timeName=editTime.name, weekData=weekData, ringTime=time.strftime("%H:%M"), ringPattern=editTime.pattern, patterns=patterns)
+        return render_template('edittime.html', title=title, timeId=edit, timeName=editTime.name, weekData=weekData, ringTime=time.strftime("%H:%M"))
     elif delete:
         Time.query.filter(Time.id == delete).delete()
         db.session.commit()
@@ -54,14 +52,12 @@ def times_view():
             name = t.name
             days = t.days
             time = t.time.strftime("%H:%M")
-            pattern = t.pattern
-            pattern = Pattern.query.get(pattern)
             for dayNumber in range(0, 7):
                 if days[dayNumber] == '1':
                     weekData += ["1"]
                 else:
                     weekData += ["0"]
-            timeData.append([id, name, weekData, time, pattern.name])
+            timeData.append([id, name, weekData, time])
         return render_template('times.html', times=timeData, updated=updated, deleted=deleted, added=added)
 
 
@@ -75,14 +71,13 @@ def times_post():
         ringTime = datetime.strptime(
             request.form.get('ringTime'), '%H:%M').time()
         weekDays = list("0000000")
-        ringPattern = request.form.get('pattern')
         for dayNumber in range(0, 7):
             formDay = request.form.get(getDayName(dayNumber))
             if formDay == "1":
                 weekDays[dayNumber] = "1"
         weekDays = "".join(weekDays)
         newTime = Time(name=timeName, days=weekDays,
-                       time=ringTime, pattern=ringPattern)
+                       time=ringTime)
         db.session.add(newTime)
         db.session.commit()
         msg = 'Time with ID %s has been added!' % newTime.id
@@ -93,7 +88,6 @@ def times_post():
         ringTime = datetime.strptime(
             request.form.get('ringTime'), '%H:%M').time()
         weekDays = list("0000000")
-        ringPattern = request.form.get('pattern')
         for dayNumber in range(0, 7):
             formDay = request.form.get(getDayName(dayNumber))
             if formDay == "1":
@@ -103,7 +97,6 @@ def times_post():
         editTime.name = timeName
         editTime.days = weekDays
         editTime.time = ringTime
-        editTime.pattern = ringPattern
         db.session.commit()
         msg = 'Time with ID %s has been updated!' % editTime.id
         flash(msg, 'success')

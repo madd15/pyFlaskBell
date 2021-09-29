@@ -32,8 +32,6 @@ def login_post():
                 return redirect(url_for('times.times_view'))
             elif page == "/breaks":
                 return redirect(url_for('breaks.breaks_view'))
-            elif page == "/patterns":
-                return redirect(url_for('patterns.patterns_view'))
             elif page == "/users":
                 return redirect(url_for('users.users_view'))
             else:

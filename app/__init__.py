@@ -90,9 +90,6 @@ def create_app():
     from .times import times as times_blueprint
     app.register_blueprint(times_blueprint, url_prefix='/')
 
-    from .patterns import patterns as patterns_blueprint
-    app.register_blueprint(patterns_blueprint, url_prefix='/')
-
     from .users import users as users_blueprint
     app.register_blueprint(users_blueprint, url_prefix='/')
 

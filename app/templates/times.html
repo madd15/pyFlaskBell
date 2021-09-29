@@ -31,7 +31,6 @@
                     <tr>
                         <th scope="col">Time Name</th>
                         <th scope="col">Ring Time</th>
-                        <th scope="col">Ring Pattern Name</th>
                         <th scope="col" class="text-center">Monday</th>
                         <th scope="col" class="text-center">Tuesday</th>
                         <th scope="col" class="text-center">Wednesday</th>
@@ -47,7 +46,6 @@
                         <tr class="align-items-center">
                             <td>{{row[1]}}</td>
                             <td>{{row[3]}}</td>
-                            <td>{{row[4]}}</td>
                             {% for day in row[2] %}
                                 {% if day == "1" %}
                                     <td class="table-success text-center"><i class="bi bi-bell"></i></td>
