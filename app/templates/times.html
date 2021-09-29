@@ -7,7 +7,7 @@
             <h3>Times</h3>
         </div>
         <div class="col-2 p-3">
-            <a href="?add=true" type="button" class="btn btn-primary">Add New Time</a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Add New Time</button>
         </div>
     </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -47,13 +47,13 @@
                             <td>{{row[1]}}</td>
                             <td>{{row[3]}}</td>
                             {% for day in row[2] %}
-                                {% if day == "1" %}
+                                {% if day[1] == "1" %}
                                     <td class="table-success text-center"><i class="bi bi-bell"></i></td>
                                 {% else %}
                                     <td class="table-danger text-center"><i class="bi bi-bell-slash"></i></td>
                                 {% endif %}
                             {% endfor %}
-                            <td><a type="button" class="btn btn-warning" href="?edit={{row[0]}}"><i class="bi bi-pencil-square"></i></a>
+                            <td><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{row[0]}}"><i class="bi bi-pencil-square"></i></button>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{row[0]}}"><i class="bi bi-trash"></i></button>
 
                                 <div class="modal fade" id="deleteModal{{row[0]}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -73,12 +73,107 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="modal fade" id="editModal{{row[0]}}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Editing Time - {{row[1]}}</h5>
+                                                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form method="post" action="?edit={{row[0]}}">
+                                                <div class="modal-body">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            <label for="timeName">Name</label>
+                                                            <input type="text" class="form-control" id="timeName" pattern="[a-zA-Z][a-zA-Z0-9 \-_]+"
+                                                                name="timeName" placeholder="Enter time name" value="{{row[1]}}" 
+                                                                title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, space, - and _" required>
+                                                        </div>
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            <label for="ringTime">Time</label>
+                                                            <input type="time" class="form-control" id="ringTime" name="ringTime" data-time-format="HH:MM" pattern="[\d]{2}:[\d]{2}"
+                                                                placeholder="Enter time" value="{{row[3]}}" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            {% for day in row[2] %}
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" value="1" id="{{day[0]}}" name="{{day[0]}}"
+                                                                    {% if day[1] == "1" %}
+                                                                        checked="checked" 
+                                                                    {% endif %}
+                                                                    >
+                                                                <label class="form-check-label" for="defaultCheck1">
+                                                                    {{ day[0] }}
+                                                                </label>
+                                                            </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
 
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Adding Time</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="?add=true">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="timeName">Name</label>
+                            <input type="text" class="form-control" id="timeName" pattern="[a-zA-Z][a-zA-Z0-9 \-_]+"
+                                name="timeName" placeholder="Enter time name"
+                                title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, space, - and _" required>
+                        </div>
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="ringTime">Time</label>
+                            <input type="time" class="form-control" id="ringTime" name="ringTime" data-time-format="HH:MM" pattern="[\d]{2}:[\d]{2}"
+                                placeholder="Enter time" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-3">
+                            {% for day in weekNames %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="{{day[0]}}" name="{{day[0]}}"
+                                    {% if day[1] == "1" %}
+                                        checked="checked" 
+                                    {% endif %}
+                                    >
+                                <label class="form-check-label" for="defaultCheck1">
+                                    {{ day[0] }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

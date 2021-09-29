@@ -46,6 +46,10 @@ def times_view():
     else:
         times = Time.query.order_by(Time.time).all()
         timeData = []
+        weekNames = []
+        for dayNumber in range(0, 7):
+            dayName = getDayName(dayNumber)
+            weekNames.append([dayName])
         for t in times:
             weekData = []
             id = t.id
@@ -53,12 +57,14 @@ def times_view():
             days = t.days
             time = t.time.strftime("%H:%M")
             for dayNumber in range(0, 7):
+                dayName = getDayName(dayNumber)
                 if days[dayNumber] == '1':
-                    weekData += ["1"]
+                    active = "1"
                 else:
-                    weekData += ["0"]
+                    active = "0"
+                weekData.append([dayName, active])
             timeData.append([id, name, weekData, time])
-        return render_template('times.html', times=timeData, updated=updated, deleted=deleted, added=added)
+        return render_template('times.html', times=timeData, weekNames=weekNames, updated=updated, deleted=deleted, added=added)
 
 
 @times.route('/times', methods=['POST'])
