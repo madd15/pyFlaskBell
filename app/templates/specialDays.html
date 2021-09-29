@@ -41,7 +41,28 @@
                         <td>{{sd.sdate}}</td>
                         <td><a type="button" class="btn btn-info" href="{{url_for('specialDays.times_view')}}?id={{sd.id}}"><i class="bi bi-clock"></i></a>
                             <a type="button" class="btn btn-warning" href="?edit={{sd.id}}"><i class="bi bi-pencil-square"></i></a>
-                            <a type="button" class="btn btn-danger" href="?delete={{sd.id}}"><i class="bi bi-trash"></i></a></td>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{sd.id}}"><i class="bi bi-trash"></i></button>
+
+                            <div class="modal fade" id="deleteModal{{sd.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">Deleting Special Day - {{sd.name}}</h5>
+                                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Deleting this special day will also remove the associated times.
+                                            
+                                            Are you sure you want to delete {{sd.name}} - {{sd.sdate}}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <a type="button" class="btn btn-primary" href="?delete={{sd.id}}"><i class="bi bi-trash"></i> Confirm Deletion</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

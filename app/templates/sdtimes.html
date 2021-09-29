@@ -4,10 +4,17 @@
 <div class="container">
     <div class="row justify-content-md-center mr-auto">
         <div class="col-8 p-3">
-            <h3>Times</h3>
+            <h3>Special Day Times - {{dayName}}</h3>
         </div>
         <div class="col-2 p-3">
-            <a href="?add={{ tid }}" type="button" class="btn btn-primary">Add New Time</a>
+        </div>
+    </div>
+    <div class="row justify-content-md-center mr-auto">
+        <div class="col-8 p-3">
+            <a type="button" class="btn btn-secondary" href="{{ url_for('specialDays.view') }}"><i class="bi bi-backspace"></i> Back</a>
+        </div>
+        <div class="col-2 p-3">
+            <a href="?add={{ tid }}" type="button" class="btn btn-primary"><i class="bi bi-plus"></i> Add New Time</a>
         </div>
     </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -40,7 +47,26 @@
                             <td>{{row[1]}}</td>
                             <td>{{row[2]}}</td>
                             <td><a type="button" class="btn btn-warning" href="?t={{tid}}&edit={{row[0]}}"><i class="bi bi-pencil-square"></i></a>
-                                <a type="button" class="btn btn-danger" href="?t={{tid}}&delete={{row[0]}}"><i class="bi bi-trash"></i></a></td>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{row[0]}}"><i class="bi bi-trash"></i></button>
+
+                                <div class="modal fade" id="deleteModal{{row[0]}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel">Deleting Special Day Time - {{row[1]}}</h5>
+                                                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete {{row[1]}}?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <a type="button" class="btn btn-primary" href="?t={{tid}}&delete={{row[0]}}"><i class="bi bi-trash"></i> Confirm Deletion</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

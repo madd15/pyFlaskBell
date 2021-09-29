@@ -38,7 +38,28 @@
                     <tr>
                         <td>{{u.username}}</td>
                         <td><a type="button" class="btn btn-warning" href="?edit={{u.id}}"><i class="bi bi-pencil-square"></i></a>
-                            <a type="button" class="btn btn-danger" href="?delete={{u.id}}"><i class="bi bi-trash"></i></a></td>
+                                <button disabled="disabled" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{u.id}}"
+                                {% if u.username == 'admin' %}
+                                    disabled="disabled"
+                                {% endif %} ><i class="bi bi-trash"></i></button>
+                            <div class="modal fade" id="deleteModal{{u.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">Deleting User - {{u.username}}</h5>
+                                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete {{u.username}}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <a type="button" class="btn btn-primary" href="?delete={{u.id}}"><i class="bi bi-trash"></i> Confirm Deletion</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
