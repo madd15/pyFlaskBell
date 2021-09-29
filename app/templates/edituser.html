@@ -13,10 +13,13 @@
                 <div class="form-row">
                     <div class="form-group col-md-6 mb-3">
                         <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" name="username"
-                            pattern="[a-zA-Z][a-zA-Z0-9\-]+" placeholder="Username" value="{{username}}"
-                            title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, -"
-                            required>
+                            <input type="text" class="form-control" id="username" name="username"
+                                pattern="[a-zA-Z][a-zA-Z0-9\-]+" placeholder="Username" value="{{username}}"
+                                title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, -"
+                                required
+                                {% if username == 'admin' %}
+                                    disabled="disabled"
+                                {% endif %}>
                     </div>
                 </div>
                 <div class="form-row">
@@ -26,6 +29,7 @@
                             placeholder="Password">
                     </div>
                 </div>
+                <a type="button" class="btn btn-secondary" href="{{ url_for('users.users_view') }}">Cancel</a>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
