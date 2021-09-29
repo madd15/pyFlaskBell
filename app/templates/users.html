@@ -38,7 +38,7 @@
                     <tr>
                         <td>{{u.username}}</td>
                         <td><a type="button" class="btn btn-warning" href="?edit={{u.id}}"><i class="bi bi-pencil-square"></i></a>
-                                <button disabled="disabled" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{u.id}}"
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{u.id}}"
                                 {% if u.username == 'admin' %}
                                     disabled="disabled"
                                 {% endif %} ><i class="bi bi-trash"></i></button>
