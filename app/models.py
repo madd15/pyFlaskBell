@@ -30,9 +30,12 @@ class specialDay(db.Model):
 
 
 class specialDayTime(db.Model):
+    __table_args__ = (
+        db.UniqueConstraint('day', 'time'),
+    )
     id = db.Column(db.Integer, primary_key=True)
     day = db.Column(db.Integer, nullable=False)
-    time = db.Column(db.Time(), unique=True, nullable=False)
+    time = db.Column(db.Time(), nullable=False)
 
 class Setting(db.Model):
     id = db.Column(db.Integer, primary_key=True)
