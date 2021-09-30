@@ -7,7 +7,7 @@
             <h3>Special Days</h3>
         </div>
         <div class="col-2 p-3">
-            <a href="?add=true" type="button" class="btn btn-primary">Add New Special Day</a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Add New Special Day</button>
         </div>
     </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -40,7 +40,7 @@
                         <td>{{sd.name}}</td>
                         <td>{{sd.sdate}}</td>
                         <td><a type="button" class="btn btn-info" href="{{url_for('specialDays.times_view')}}?id={{sd.id}}"><i class="bi bi-clock"></i></a>
-                            <a type="button" class="btn btn-warning" href="?edit={{sd.id}}"><i class="bi bi-pencil-square"></i></a>
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{sd.id}}"><i class="bi bi-pencil-square"></i></button>
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{sd.id}}"><i class="bi bi-trash"></i></button>
 
                             <div class="modal fade" id="deleteModal{{sd.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -62,6 +62,43 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="modal fade" id="editModal{{sd.id}}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel">Editing Special Day - {{sd.name}}</h5>
+                                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="post" action="?edit={{sd.id}}">
+                                            <div class="modal-body">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 mb-3">
+                                                        <label for="sdName">Name</label>
+                                                        <input type="text" class="form-control" id="sdName" name="sdName"
+                                                            pattern="[a-zA-Z][a-zA-Z0-9 \-_]+" placeholder="Enter Name" value="{{sd.name}}"
+                                                            title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, space, - and _"
+                                                            required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 mb-3">
+                                                        <label for="sDate">Date</label>
+                                                        <input type="date" class="form-control" id="sDate" name="sDate" required
+                                                            pattern="[\d]{5}-[\d]{2}-[\d]{2}" data-date-format="dd/mm/yyyy" placeholder="Enter date"
+                                                            value="{{sd.sdate}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
                         </td>
                     </tr>
                     {% endfor %}
@@ -70,4 +107,40 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Adding New Special Day</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="?add=true">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="sdName">Name</label>
+                            <input type="text" class="form-control" id="sdName" name="sdName"
+                                pattern="[a-zA-Z][a-zA-Z0-9 \-_]+" placeholder="Enter Name"
+                                title="Name must be atleast 2 characters and can only contain lowercase letters, uppercase letters, numbers, space, - and _"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="sDate">Date</label>
+                            <input type="date" class="form-control" id="sDate" name="sDate" required
+                                pattern="[\d]{5}-[\d]{2}-[\d]{2}" data-date-format="dd/mm/yyyy" placeholder="Enter date">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {%- endblock content %}

@@ -14,7 +14,7 @@
             <a type="button" class="btn btn-secondary" href="{{ url_for('specialDays.view') }}"><i class="bi bi-backspace"></i> Back</a>
         </div>
         <div class="col-2 p-3">
-            <a href="?add={{ tid }}" type="button" class="btn btn-primary"><i class="bi bi-plus"></i> Add New Time</a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bi bi-plus"></i> Add New Time</button>
         </div>
     </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -32,7 +32,7 @@
         {% endif %}
     {% endwith %}
     <div class="row justify-content-md-center">
-        <div class="col-6">
+        <div class="col-4">
             <table class="table table-responsive">
                 <thead class="thead-light">
                     <tr>
@@ -44,7 +44,7 @@
                     {% for row in times %}
                         <tr class="align-items-center">
                             <td>{{row[1]}}</td>
-                            <td><a type="button" class="btn btn-warning" href="?t={{tid}}&edit={{row[0]}}"><i class="bi bi-pencil-square"></i></a>
+                            <td><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{row[0]}}"><i class="bi bi-pencil-square"></i></button>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{row[0]}}"><i class="bi bi-trash"></i></button>
 
                                 <div class="modal fade" id="deleteModal{{row[0]}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -64,6 +64,33 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="modal fade" id="editModal{{row[0]}}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Editing Special Day Time - {{row[1]}}</h5>
+                                                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form method="post" action="?t={{tid}}&edit={{row[0]}}">
+                                                <div class="modal-body">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            <label for="time">Time</label>
+                                                            <input type="time" class="form-control" id="time" name="time" data-time-format="HH:MM" pattern="[\d]{2}:[\d]{2}"
+                                                                placeholder="Enter time" value="{{row[1]}}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </td>
                         </tr>
                     {% endfor %}
@@ -72,4 +99,31 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Adding Special Day Time</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="?add={{ tid }}">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="time">Time</label>
+                            <input type="time" class="form-control" id="time" name="time" data-time-format="HH:MM" pattern="[\d]{2}:[\d]{2}"
+                                placeholder="Enter time" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {%- endblock content %}
